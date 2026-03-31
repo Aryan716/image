@@ -13,10 +13,12 @@ function BuyCredit() {
   const navigate = useNavigate();
 
   const initPay = async(order)=>{
+     console.log("Init pay order:", order);
     if (!window.Razorpay) {
       console.error("Razorpay script is not loaded.");
       return;
   }
+  
     const options = {
       key: import.meta.env.VITE_RAZORPAY_KEY_ID,
       amount: order.amount,
@@ -42,23 +44,35 @@ function BuyCredit() {
     const rzp=new window.Razorpay(options)
     rzp.open()
   };
-  const paymentRazorpay =  async (planId)=>{
-    try {
-      if(!user)
-      {
-        setShowLogin(true);
-      }
-      const {data}= await axios.post(backendUrl+"/api/user/pay-razor",{planId},{headers: {token}});
-
-      if(data.success)
-      {
-        initPay(data.order);
-      }
-      
-    } catch (error) {
-      toast.error(error.message);
+  const paymentRazorpay = async (planId) => {
+  try {
+    if (!user) {
+      setShowLogin(true);
+      return;
     }
+
+    // Ensure login modal is closed before initiating payment
+    setShowLogin(false);
+
+    const { data } = await axios.post(
+      backendUrl + "/api/user/pay-razor",
+      { planId },
+      { headers: { token } }
+    );
+
+    console.log("Pay razor response:", data);
+
+    if (data.success) {
+      initPay(data.order);
+    } else {
+      toast.error(data.message || "Payment initiation failed");
+    }
+  } catch (error) {
+    console.error("Payment error:", error);
+    toast.error(error.response?.data?.message || error.message);
   }
+};
+
 
   return (
     <motion.div

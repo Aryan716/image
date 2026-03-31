@@ -10,28 +10,29 @@ const generateImage = async (req, res) => {
             return res.json({ success: false, message: "Missing Details" })
         }
 
-        if (user.creditBalance === 0 || userModel.creditBalance < 0) {
+        if (user.creditBalance === 0 || user.creditBalance < 0) {
             return res.json({ success: false, message: 'No Credit Balance', creditBalance: user.creditBalance });
         }
 
         const formData = new FormData()
-        formData.append('prompt',prompt);
-        
-        
-        const {data} = await axios.post('https://clipdrop-api.co/text-to-image/v1',formData,{
+        formData.append('prompt', prompt);
+
+
+        const { data } = await axios.post('https://clipdrop-api.co/text-to-image/v1', formData, {
             headers: {
-                'x-api-key': process.env.CLIPDROP_API,
+                'x-api-key': "82a681c9ae56b41dc4208908c52268ee050289ad71fe69ffa4fc788e2efefe6995c770821b663e4b067728fa4faf632f",
             },
             responseType: 'arraybuffer'
         });
-        
-    
-        const base64Image= Buffer.from(data,'binary').toString('base64');
-        const resultImage = `data:image/png;base64,${base64Image}`;
-        await userModel.findByIdAndUpdate(user._id,{creditBalance : user.creditBalance - 1})
 
-        res.json({success:true,message:"Image Generated",
-            creditBalance: user.creditBalance - 1,resultImage,
+
+        const base64Image = Buffer.from(data, 'binary').toString('base64');
+        const resultImage = `data:image/png;base64,${base64Image}`;
+        await userModel.findByIdAndUpdate(user._id, { creditBalance: user.creditBalance - 1 })
+
+        res.json({
+            success: true, message: "Image Generated",
+            creditBalance: user.creditBalance - 1, resultImage,
         })
 
     } catch (error) {
@@ -40,4 +41,4 @@ const generateImage = async (req, res) => {
     }
 }
 
-export {generateImage};
+export { generateImage };

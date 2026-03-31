@@ -23,4 +23,7 @@ app.get('/',(req,res)=>{
 })
 
 
-app.listen(PORT,( )=> console.log(`Server Started at ${PORT}`));
+app.listen(5000,()=>
+{
+    console.log("server started")
+})
