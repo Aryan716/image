@@ -106,5 +106,5 @@ CURRENCY="INR"
 ```
 
 ## Project Link
-Link - [https://imagify-gilt-alpha.vercel.app](https://imagify-gilt-alpha.vercel.app)
+Link - https://image-jkil.vercel.app/
 (Use Chrome for better experience)
